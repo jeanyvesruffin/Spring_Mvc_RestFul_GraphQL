@@ -1,4 +1,4 @@
-# SPRING MVC
+# SPRING MVC RESTFUL GRAPHQL
 
 Remise à niveau Spring.
 
