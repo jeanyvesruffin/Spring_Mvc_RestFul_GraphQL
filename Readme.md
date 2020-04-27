@@ -107,25 +107,157 @@ choco install springtoolsuite
 * thymeleaf-spring5
 * spring-boot-starter-test
 * hibernate-validator
+* h2database
+
 
 ### Driver H2
 
 Telechargement du driver [H2](http://www.h2database.com/html/main.html) - Driver H2
 
 
+## Spring Boot Application Annotation
 
-## PARAG 1
+**@SpringBootConfiguration**
+
+*Identifie la classe comme source de définitions de bean pour le contexte d'application.*
 
 
-## PARAG 2
+**@EnableAutoConfiguration**
 
-## PARAG 3
+*Indique à Spring Boot de commencer à ajouter des beans en fonction des paramètres de chemin de classe, d'autres beans et de divers paramètres de propriété. Par exemple, si se spring-webmvctrouve sur le chemin de classe, cette annotation marque l'application en tant qu'application Web et active les comportements clés, tels que la configuration de a DispatcherServlet.*
 
-## TPARAG 4
+**@ComponentScan**
+
+*Indique à Spring de rechercher d'autres composants, configurations et services dans le com/examplepackage, le laissant trouver les contrôleurs.*
+
+
+## Spring Boot Properties
+
+Configurer votre application dans le fichier application.properties à l'aide de la [documentation Spring](https://docs.spring.io/spring-boot/docs/2.0.4.RELEASE/reference/html/common-application-properties.html) - common application properties
+
+Exemple:
+
+	logging.level.org.springframework:debug
+
+
+## Spring Boot Profiles
+
+Configurer la gestion de vos environnements de developpement, recette, production dans le fichier de configuration application.properties,
+
+Exemple:
+
+	spring.profiles.active=devv
+	application-{profile}.properties
+	applications-dev.properties
+	applications-test.properties
+	applications-prod.properties
+
+
+## Accès à la base de donnée H2 (persistance des données)  avec Spring Boot
+
+**ATTENTION H2 N'EST PAS RECOMMANDE POUR LA PRODUCTION**
+
+Configurer votre database dans le fichier application properties telquel:
+
+	spring.h2.console.enabled=true
+	spring.h2.console.path=/h2
+	spring.datasource.url=jdbc:h2:mem:bugtracker
+	
+	
+Veuillez saisir les parametres demandé lors de la connexion à la console H2:
+
+http://localhost:8080/h2
+
+
+## ORM avec JPA
+
+Spring integre Hibernate a travers Spring Data JPA
+
+Methodologie:
+
+1. Création de Entity (Pojo)
+2. Création des Repository (Interface qui extends CrudRepository)
+3. Création d'une simple query pour tester H2
+
+Exemple:
+
+	// Simple query to populate DB
+	@Bean
+	public CommandLineRunner demo(IApplicationRepository repository) {
+		return (args) -> {
+			repository.save(new Application("TrackZilla", "Jean-Yves.Ruffin", "Application for tracking bugs."));
+			repository.save(new Application("Expenses", "Mary.Jones","Application to track expense reports."));
+			repository.save(new Application("Notification", "Karen.Kane", "Application to send alerts and notifications."));
+			for(Application application: repository.findAll()) {
+				log.info("The application is: "+ application.toString());
+			}
+		};
+	}
+
+
+#### Entities
+
+Attention l'entité doit respecter les regles suivante:
+
+1. Elle doit posséder un constructeur vide, public ou protected. Rappelons que ce constructeur vide existe par défaut si aucun constructeur n'existe dans la classe. Dans le cas contraire, il doit être ajouté explicitement.
+
+2. Elle ne doit pas être final, et aucune de ses méthodes ne peut être final.
+
+3. Une entité JPA ne peut pas être une interface ou une énumération.
+
+4. Une entité JPA peut être une classe concrête ou abstraite.
+
+
+Exemple **Entity** representé par un pojo avec les annotations nécessaire à la construction de l'ORM:
+
+	import javax.persistence.*;
+	@Entity
+	public class Application {
+		@Id
+		@GeneratedValue(strategy = GenerationType.AUTO)
+		@Column(name="application_id")
+		private Integer id;
+		
+		@Column(name = "app_name", nullable = false)
+		private String name;
+		
+		@Column(length = 2000)
+		private String description;
+		private String owner;
+		
+	   public Application() {
+	   }
+	   public Application(String name, String owner, String description) {
+		   this.name = name;
+		   this.owner = owner;
+		   this.description = description;
+	   }
+    	***GETERS ET SETTERS***
+	}
+
+Exemple cardinalité **ManyToOne**
+
+    @ManyToOne
+    @JoinColumn(name = "application_id")
+    private Application application;
+
+    @ManyToOne
+    @JoinTable(name ="ticket_release", joinColumns = @JoinColumn(name = "ticket_fk"), inverseJoinColumns = @JoinColumn(name = "release_fk"))
+    private Release release;
+
+
+
 
 
 
 ### Bug fixes 
+
+#### Maven dependency
+
+Toujours se méfier des **SCOPE** des dependences copier/ coller du site maven repository.
+
+Exemple: H2 par defaut est à test le changer en runtime
+
 
 #### Server TOMCAT
 
