@@ -246,9 +246,51 @@ Exemple cardinalité **ManyToOne**
     private Release release;
 
 
+## Mise en place du package service
+
+Le package service comporte des interfaces. Ces interfaces sont ensuite implementées avec en leurs seins les attributs membre a la classe du repository associé.
+Ces classes implementaient utilises le stereotype @Service
+
+Exemple:
+
+L'interface IExemple, qui contient le "contrat" de l'interface est implementé dans la class ExempleImpl qui défini le contrat de l'interface à l'aide de @Override et declare l'attribut membre à la classe du repository associé Exemple à l'aide de l'annotation @Autowired.
+
+Cela a pour effet de "brancher" le model (datas...) à travers son repository, à l'interface et de definir les methodes de CRUD (findAll(), deleteAll() ..ect).
+Rappelons que les methodes CRUD sont accessible a travers l''heritage de CrudRepository.
 
 
+## Mise en place du controller
 
+Maintenant que nos services sont impémentés nous pouvons les utiliser dans nos controllers.
+
+Nous annotons avant tout notre classe @Controller.
+
+Exemple:
+
+	@Controller
+	public class TzaController
+
+Premièrement, declarer les attributs membres aux classes Service.
+
+Exemple:
+
+	  private ApplicationService applicationService;
+	
+Secondement, on genere les setters, que l'on branche @Autowired.
+Cela aura pour effet de pouvoir attribuer une valeur à un model à l'aide de ces méthodes.
+
+	@Autowired
+    public void setApplicationService(ApplicationService applicationService) {
+        this.applicationService = applicationService;
+    }
+
+Enfin, nous declarons les methodes @GetMapping permettant de consulter les models du repository (sur les url corrsepondant ici localhost:8080/application) à l'aide du parametre Model issu de Spring.ui qui à pour effet d'indiquer à Spring que le return sera un model.
+
+	@GetMapping("/applications")
+	    public String retrieveApplications(Model model){
+	        model.addAttribute("applications", applicationService.listApplications());
+	        return "applications";
+	    }
 
 ### Bug fixes 
 
@@ -268,6 +310,32 @@ Cliquer sur propriete > General puis cliquer sur le bouton "Switch Location", ce
 Double-cliquer ensuite sur le server puis cocher dans la rubrique Server Locations sur la case > Use Tomcat installation (takes controle of Tomcat installation)
 
 Votre server TOMCAT est maintenant operationnel à l'adresse URl: localhost:8080
+
+#### Mode debug Spring
+
+**RAPPEL** dans le fichier de configuration application.properties
+
+	logging.level.org.springframework:debug
+
+##### Erreur rencontrées
+
+	***************************
+	APPLICATION FAILED TO START
+	***************************
+	
+	Description:
+	
+	Parameter 0 of method setTicketService in com.ruffin.Spring_Mvc_Restful_GraphQl.web.TzaController required a bean of type 'com.ruffin.Spring_Mvc_Restful_GraphQl.service.TicketServiceImpl' that could not be found.
+	
+	
+	Action:
+	
+	Consider defining a bean of type 'com.ruffin.Spring_Mvc_Restful_GraphQl.service.TicketServiceImpl' in your configuration.
+
+**==> RESOLUTION**
+
+Il manquait l'annotation @Service à la classe TicketServiceImpl.class
+
 
 #### ResourcesBundle
 

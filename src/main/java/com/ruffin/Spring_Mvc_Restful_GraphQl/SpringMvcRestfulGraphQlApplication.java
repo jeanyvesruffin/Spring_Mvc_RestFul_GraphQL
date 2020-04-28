@@ -22,17 +22,19 @@ public class SpringMvcRestfulGraphQlApplication {
 		SpringApplication.run(SpringMvcRestfulGraphQlApplication.class, args);
 	}
 
+	
+	// Test populate H2 = perrsistant data in database H2
 	// Simple query to populate DB
-	@Bean
-	public CommandLineRunner demo(IApplicationRepository repository) {
-		return (args) -> {
-			repository.save(new Application("TrackZilla", "Jean-Yves.Ruffin", "Application for tracking bugs."));
-			repository.save(new Application("Expenses", "Mary.Jones","Application to track expense reports."));
-			repository.save(new Application("Notification", "Karen.Kane", "Application to send alerts and notifications."));
-
-			for(Application application: repository.findAll()) {
-				log.info("The application is: "+ application.toString());
-			}
-		};
-	}
+//	@Bean
+//	public CommandLineRunner demo(IApplicationRepository repository) {
+//		return (args) -> {
+//			repository.save(new Application("TrackZilla", "Jean-Yves.Ruffin", "Application for tracking bugs."));
+//			repository.save(new Application("Expenses", "Mary.Jones","Application to track expense reports."));
+//			repository.save(new Application("Notification", "Karen.Kane", "Application to send alerts and notifications."));
+//
+//			for(Application application: repository.findAll()) {
+//				log.info("The application is: "+ application.toString());
+//			}
+//		};
+//	}
 }
