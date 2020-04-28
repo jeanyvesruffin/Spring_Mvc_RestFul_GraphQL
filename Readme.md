@@ -292,6 +292,30 @@ Enfin, nous declarons les methodes @GetMapping permettant de consulter les model
 	        return "applications";
 	    }
 
+## Building a RESTFul Web Application with Spring Boot
+
+Concepts étudié:
+
+- Construction du service RESTFul
+- Style de l'architecture REST
+- Codes des responses HTTP
+- Annotations
+- Manipulation des exceptions (Exception Handling)
+
+
+**Style de l'architecture REST**
+
+	@GetMapping("/tickets")
+    public ResponseEntity<List<Ticket>> getAllTickets() {
+        List<Ticket> list = ticketService.listTickets();
+        return new ResponseEntity<List<Ticket>>(list, HttpStatus.OK);
+    }
+    
+
+ResponseEntity definition: Extension of HttpEntity that adds a HttpStatus status code.Used in RestTemplate as well @Controller methods. 
+		
+		
+		
 ### Bug fixes 
 
 #### Maven dependency

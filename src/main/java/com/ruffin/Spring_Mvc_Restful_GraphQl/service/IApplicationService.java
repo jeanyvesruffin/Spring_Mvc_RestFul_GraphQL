@@ -4,5 +4,6 @@ import com.ruffin.Spring_Mvc_Restful_GraphQl.entity.Application;
 
 public interface IApplicationService {
 
-	Iterable<Application> listApplication();
+	Iterable<Application> listApplications();
+    Application findApplication(long id);
 }

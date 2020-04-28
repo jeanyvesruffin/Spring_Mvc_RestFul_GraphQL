@@ -1,5 +1,7 @@
 package com.ruffin.Spring_Mvc_Restful_GraphQl.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +15,8 @@ public class TicketServiceImpl implements ITicketService {
 	private ITicketRepository ticketRepository;
 	
 	@Override
-	public Iterable<Ticket> listTicket() {
-		return ticketRepository.findAll();
+	public List<Ticket> listTickets() {
+		return (List<Ticket>) ticketRepository.findAll();
 	}
 
 }

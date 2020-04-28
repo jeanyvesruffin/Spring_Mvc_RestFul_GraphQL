@@ -4,5 +4,5 @@ import com.ruffin.Spring_Mvc_Restful_GraphQl.entity.Ticket;
 
 public interface ITicketService {
 
-	Iterable<Ticket> listTicket();
+	Iterable<Ticket> listTickets();
 }
