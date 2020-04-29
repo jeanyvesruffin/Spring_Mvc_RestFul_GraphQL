@@ -314,6 +314,19 @@ Concepts étudié:
 
 ResponseEntity definition: Extension of HttpEntity that adds a HttpStatus status code.Used in RestTemplate as well @Controller methods. 
 		
+## Building a GraphQL Server with Spring Boot
+		
+Concept étudié:
+
+- Language de requete pour API
+- Apercu de GraphQL
+- Schema
+- Server GraphQL
+- Resolvers, queries et mutations
+- Exception handling
+- GraphiQL
+
+GraphQl offre une grande flexibilité à notre API REST, qui est elle très rigide.
 		
 		
 ### Bug fixes 

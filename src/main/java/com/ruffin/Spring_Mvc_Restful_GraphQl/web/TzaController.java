@@ -102,11 +102,5 @@ public class TzaController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Application Not Found");
         }
     }
-	
-	
-	
-	
-	
-	
-	
+
 }
