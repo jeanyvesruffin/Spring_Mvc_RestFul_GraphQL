@@ -716,3 +716,21 @@ Il manquait l'annotation @Service à la classe TicketServiceImpl.class
 #### Java JSP
 
 Deprecié il faut etre en java 1.8 pour que cela fonctionne
+
+#### JUnit
+
+Si erreur :
+
+	could not run test no tests found with test runner JUnit 5
+
+Solution: 
+
+
+Select your spring boot project name in Package Explorer
+Right Click
+Select "Run As"
+Select "Run Configurations" in the sub menu
+It will open a popup window
+Select JUnit in the left panel
+Select the project entries under JUnit
+Right click on the project name and click delete
