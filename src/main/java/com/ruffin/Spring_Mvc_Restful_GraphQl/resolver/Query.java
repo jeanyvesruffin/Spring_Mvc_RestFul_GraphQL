@@ -17,7 +17,7 @@ public class Query implements GraphQLQueryResolver{
 		this.applicationRepository = applicationRepository;
 	}
 	
-	public Iterable<Application> findAllApplication(){	
+	public Iterable<Application> findAllApplications(){	
 		return applicationRepository.findAll();
 	}
 	public long countApplication() {

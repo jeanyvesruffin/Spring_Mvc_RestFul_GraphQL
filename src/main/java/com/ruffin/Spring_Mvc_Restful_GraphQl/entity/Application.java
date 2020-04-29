@@ -23,7 +23,6 @@ public class Application {
 
 	@Column(length = 2000)
 	private String description;
-
 	private String owner;
 
 	public Application() {

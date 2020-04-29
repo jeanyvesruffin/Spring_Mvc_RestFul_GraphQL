@@ -1,14 +1,7 @@
 package com.ruffin.Spring_Mvc_Restful_GraphQl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-import com.ruffin.Spring_Mvc_Restful_GraphQl.entity.Application;
-import com.ruffin.Spring_Mvc_Restful_GraphQl.repository.IApplicationRepository;
 
 
 
@@ -16,7 +9,7 @@ import com.ruffin.Spring_Mvc_Restful_GraphQl.repository.IApplicationRepository;
 public class SpringMvcRestfulGraphQlApplication {
 
 	// Utilisation d'un sf4j
-	private static final Logger log = LoggerFactory.getLogger(SpringMvcRestfulGraphQlApplication.class);
+	// private static final Logger log = LoggerFactory.getLogger(SpringMvcRestfulGraphQlApplication.class);
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringMvcRestfulGraphQlApplication.class, args);

@@ -8,9 +8,6 @@ Cloner le projet dans Eclipse pour executer et voir les différents TP réalisé
 
 Monter le projet et demarrer votre serveur.
 
-Accessible à l'adresse : http://localhost:8080/BugTracking
-
-
 
 ### Conditions préalables
 
@@ -94,7 +91,6 @@ choco install springtoolsuite
 - Spring Tools 3 (standalone Edition) 3.9.12.RELEASE
 - Spring Tools 3 Add-On for Spring Tools 4 3.9.12.RELEASE
 - Spring Tools 4 (aka Spring Tool Suite 4) 4.6.0.RELEASE
-- ResourceBundle Editor
 
 
 *En cours d'édition End with an example of getting some data out of the system or using it for a little demo*
@@ -106,7 +102,6 @@ choco install springtoolsuite
 * spring-boot-starter-tomcat
 * thymeleaf-spring5
 * spring-boot-starter-test
-* hibernate-validator
 * h2database
 * graphql-spring-boot-starter
 * graphql-java-tools
@@ -407,11 +402,262 @@ Creer un package exception.
 Creer une classe Exception (ex: ApplicationNotFoundException.java)  qui implemente l'interface GraphQLError et extends RuntimeException, dans le package exception. **Attention**, cette classe ,'as pas besoin de l'annotation @Component de Spring.
 
 
+**ETAPE 4 : Tester graphQl**
 
-Exemple ici:
+Démarrer votre projet et consulter l'url:
 
+http://localhost:8080/graphiql
+
+Sur cette page vous trouverez:
+
+- sur le panneau de gauche un editeur de query avec le bouton execute query en haut.
+
+- sur le panneau de droite vous trouverez de la documentation généré automatiquement.
+Vous pourrez y consulter vos schemas et mutateur.
+
+
+Exemple de query:
+	
+	{
+	  findAllApplications{
+	    id
+	  }
+	}
+	
+Return
+
+	{
+	  "data": {
+	    "findAllApplications": [
+	      {
+	        "id": "1"
+	      },
+	      {
+	        "id": "2"
+	      },
+	      {
+	        "id": "3"
+	      },
+	      {
+	        "id": "4"
+	      },
+	      {
+	        "id": "5"
+	      }
+	    ]
+	  }
+	}
+
+Reppelons nous que la base de donnée est persistante nous retirons temporairement de fichier data.sql en le renommant data.sqlzzzzzzzzz et clean install restart l'application.
+
+Nous allons remplir la base de donnée à l'aide de l'interface GraphiQl.
+
+Exemple mutation de creation:
+
+	mutation{
+	  newApplication(
+	    name: "MyApp",
+	    owner: "Jean-Yves",
+	    description: "Test Mutateur newApplication"
+	  ) {
+	    id
+	  }
+	}
+
+
+Exemple mutation de update (attention l'id doit exister"):
+
+
+	mutation{
+		updateApplicationOwner(
+		newOwner: "Brigite", id : 3
+		) {
+		  id
+		}
+	}
+
+Exemple test Exception sur l'update d'un id inexistant ex: 999:
+
+	"data": null,
+	  "errors": [
+	    {
+	      "message": "Exception while fetching data (/updateApplicationOwner) : L'application n'as pas été trouvé id : ",
+	      "path": [
+	        "updateApplicationOwner"
+	      ],
+	      
+	      
+## Enabling actuators, metrics, and health indicators
+
+Concept:
+
+- Spring boot actuator: permet de controler et auditer la santé de l'appli. Trace les metrics et http. Expose les endpoints HTTP ou JMX.
+- Actuator endpoints
+- Custom metric endpoints
+- Health indicators
+- Monitoring capabilities
+
+
+**Spring boot actuator**
+
+Ajouter la dependence spring-boot-starter-actuator à votre projet.
+Configurer votre fichier application.properties telque:
+
+	management.endpoints.web.exposure.include=info,health,metrics,loggers,beans,mappings
+	management.endpoint.health.show-details=always 
+
+
+Vous pouvez desormais consulter l'actuator à l'adresse localhost:8080/actuator
+
+Exemples:
+
+
+
+	{
+		"_links": {
+			"self": {
+				"href": "http://localhost:8080/actuator",
+				"templated": false
+			},
+			"health-path": {
+				"href": "http://localhost:8080/actuator/health/{*path}",
+				"templated": true
+			},
+			"health": {
+				"href": "http://localhost:8080/actuator/health",
+				"templated": false
+			},
+			"info": {
+				"href": "http://localhost:8080/actuator/info",
+				"templated": false
+			}
+		}
+	}
+
+
+**Custom endpoints**
+
+Premierement, creer une class implementant HealthIndicator, dans le package actuator. Puis surcharger les methodes suivant se que vous avez besoin. Ne pas oublier l'annotation @Component de Spring.
+
+Exemple:
+
+	@Component
+	public class PeopleHealthIndicator implements HealthIndicator {
+		private final String message_key = "PeopleService";
+		@Override
+		public Health health() {
+			if (!isRunningServicePeopleService()) {
+				return Health.down().withDetail(message_key, "Not available").build();
+			}
+			return Health.up().withDetail(message_key, "Available").build();
+		}
+		private Boolean isRunningServicePeopleService() {
+			Boolean isRunning = false;
+			// Add real logic here to test if People Service is running; 
+			// skipped for demo purposes
+			// cad indiquer l'indicateur par exemple que vous voulez retourner
+			return isRunning;
+		}
+	} 
+
+
+Resultat: http://localhost:8080/actuator/health
+
+	{
+	"status": "DOWN",
+	"components": {
+		"db": {
+			"status": "UP",
+			"details": {
+				"database": "H2",
+				"result": 1,
+				"validationQuery": "SELECT 1"
+			}
+		},
+		"diskSpace": {
+			"status": "UP",
+			"details": {
+			"total": 2000381014016,
+			"free": 1968134787072,
+			"threshold": 10485760
+			}
+		},
+		"people": {
+			"status": "DOWN",
+			"details": {
+			"PeopleService": "Not available"
+			}
+		},
+		"ping": {
+			"status": "UP"
+			}
+		}
+	}
+
+
+
+	
+##Testing with Spring boot
+
+Concept:
+
+- Testing (Unit test, Integration tests)
+- @SpringBootTest
+- @WebMvcTest
+- Mock environment
+- TestRestTemplate
+
+**Testing**
+
+Ajouter tous d'abord la dependence test de spring boot
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 		
-### Bug fixes 
+Avec un scope à test
+
+**Test Unitaire**
+
+- Sont réalisable à l'aide de: JUnit, Mockito, Spring Test
+- Test individuellement des unités de code (ex: methodes).
+- Simulation de classe à l'aide d'annotation @MockBean
+
+
+**@WebMvcTest**
+
+Est une annotation utilisée pour les tests unitaires de la couche contrôleur
+
+- Scans @Controller and @RestController
+- Ne charge pas le contexte d'application entièrement
+- Les dependance de bean doivent etre mocked
+- Permet de tester rapidement une portion de l'application par petit chargement.
+
+
+
+###Bug fixes 
+
+**REGLE DE BASE ==> IL FAUT TOUJOURS REGARDER LE DERNIER CAUSE BY DANS LES LOGS D'ERREUR"**
+
+####Application context
+
+Afin de savoir "Comment configurer mes parametres de dépendances à travers le fichier applciation.properties ? ".
+Il n'y a pas de solution toute faite.
+
+Il faut consulter les git sources des dependances à l'aide de Maven repository, par exemple.
+
+Puis, rechercher se dont l'on a besoin dans les fichier .properties, "alors la t'as du bol :o)".
+Soit dans les fichier de proprietes gradle.properties ou application.yml ...
+
+
+Remarques:
+
+- Si une propriete du fichier application.properties n'est pas trouvé:
+
+C'est peut etre que la dependance n'est pas mise dans le fichier maven .pom (ex: graphQl et graphiQl)
+ 
 
 #### Maven dependency
 

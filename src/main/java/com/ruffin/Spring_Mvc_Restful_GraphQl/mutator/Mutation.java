@@ -37,7 +37,7 @@ public class Mutation implements GraphQLMutationResolver {
 	 * @param id
 	 * @return Supprime l'application
 	 */
-	public boolean deleateApplication(Long id) {
+	public boolean deleteApplication(Long id) {
 		applicationRepository.deleteById(id);
 		return true;
 	}
@@ -48,7 +48,7 @@ public class Mutation implements GraphQLMutationResolver {
 	 * @param id
 	 * @return L'application avec l'owner mise à jours
 	 */
-	public Application updateApplication(String owner, Long id) {
+	public Application updateApplicationOwner(String owner, Long id) {
 		Optional<Application> optionalApplication = applicationRepository.findById(id);
 		if(optionalApplication.isPresent()) {
 			Application application = optionalApplication.get();
