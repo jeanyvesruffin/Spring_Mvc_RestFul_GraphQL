@@ -29,7 +29,7 @@ public class ApplicationServiceImpl implements IApplicationService {
 		if(optionalApplication.isPresent())
 			return optionalApplication.get();
 		else
-			throw new ApplicationNotFoundException("Application Not Found");
+			throw new ApplicationNotFoundException("L'application n'as pas été trouvé id : ", id);
 	}
 
 }

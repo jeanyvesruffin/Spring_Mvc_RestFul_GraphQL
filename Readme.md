@@ -108,6 +108,8 @@ choco install springtoolsuite
 * spring-boot-starter-test
 * hibernate-validator
 * h2database
+* graphql-spring-boot-starter
+* graphql-java-tools
 
 
 ### Driver H2
@@ -320,7 +322,7 @@ Concept étudié:
 
 - Language de requete pour API
 - Apercu de GraphQL
-- Schema
+- Schema (Defines data points offered via an API, Data types and relationships, operation available and graphql-java-tools parses schemas ending in ".graphqls")
 - Server GraphQL
 - Resolvers, queries et mutations
 - Exception handling
@@ -328,6 +330,76 @@ Concept étudié:
 
 GraphQl offre une grande flexibilité à notre API REST, qui est elle très rigide.
 		
+
+### Mise en oeuvre graphqls
+
+**ETAPE 1 : Schema**
+
+Créer un fichier .graphqls dans le dossier src/main/resources qui sera notre schema graphqls.
+
+Déclarer dans le schéma .graphqls le type Application, Query et Mutation.
+
+
+**ETAPE 2 : Query**
+
+Creer un package resolver.
+Creer une classe Query qui implemente l'interface GraphQLQueryResolver, dans le package resolver. Ne pas oublier l'annotation @Component de Spring.
+
+Instancier une interface repository, ici IApplicationRepository ==> pour avoir acces à notre CRUD.
+
+Puis, définir les methodes nécessaire au query (ici findAllApplication et countApplication), défini dans le schema.
+
+Exemple ici:
+
+	public Iterable<Application> findAllApplication(){	
+		return applicationRepository.findAll();
+	}
+	public long countApplication() {
+		return applicationRepository.count();
+	}
+
+**ETAPE 3 : Mutateur**
+
+Creer un package mutator.
+Creer une classe Mutator qui implemente l'interface GraphQLMutationResolver, dans le package mutator. Ne pas oublier l'annotation @Component de Spring.
+
+Cela nous sera utile afin de modifier, create, update ou delete (mutation) les valeurs de notre base de données.
+
+Instancier une interface repository, ici IApplicationRepository ==> pour avoir acces à notre CRUD.
+Puis, définir les methodes nécessaire au query (ici newApplication, deleteApplication et updateApplicationOwner), défini dans le schema.
+
+Exemple ici:
+
+	public Application newApplication(String name, String owner, String description) {
+		Application app = new Application(name, description, owner);
+		applicationRepository.save(app);
+		return app;
+	}
+	public boolean deleateApplication(Long id) {
+		applicationRepository.deleteById(id);
+		return true;
+	}
+	public Application updateApplication(String owner, Long id) {
+		Optional<Application> optionalApplication = applicationRepository.findById(id);
+		if(optionalApplication.isPresent()) {
+			Application application = optionalApplication.get();
+			application.setOwner(owner);
+			applicationRepository.save(application);
+			return application;
+		} else {
+			throw new ApplicationNotFoundException("L'application id "+id+" n'est pas trouvé");
+		}
+	}
+
+**ETAPE 3 : Exception**
+
+Creer un package exception.
+Creer une classe Exception (ex: ApplicationNotFoundException.java)  qui implemente l'interface GraphQLError et extends RuntimeException, dans le package exception. **Attention**, cette classe ,'as pas besoin de l'annotation @Component de Spring.
+
+
+
+Exemple ici:
+
 		
 ### Bug fixes 
 
