@@ -18,5 +18,4 @@ public class ReleaseServiceImpl implements IReleaseService {
 	public List<Release> listReleases() {
 		return (List<Release>) releaseRepository.findAll();
 	}
-
 }

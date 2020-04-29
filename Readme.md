@@ -255,10 +255,20 @@ Ces classes implementaient utilises le stereotype @Service
 
 Exemple:
 
-L'interface IExemple, qui contient le "contrat" de l'interface est implementé dans la class ExempleImpl qui défini le contrat de l'interface à l'aide de @Override et declare l'attribut membre à la classe du repository associé Exemple à l'aide de l'annotation @Autowired.
+	@Service
+	public class ReleaseServiceImpl implements IReleaseService {
 
-Cela a pour effet de "brancher" le model (datas...) à travers son repository, à l'interface et de definir les methodes de CRUD (findAll(), deleteAll() ..ect).
-Rappelons que les methodes CRUD sont accessible a travers l''heritage de CrudRepository.
+		@Autowired
+		private IReleaseRepository releaseRepository;
+		
+		@Override
+		public List<Release> listReleases() {
+			return (List<Release>) releaseRepository.findAll();
+		}
+	}
+
+
+L'interface IReleaseService, qui contient le "contrat" de l'interface est implementé dans la class ReleaseServiceImpl qui défini le contrat de l'interface à l'aide de @Override
 
 
 ## Mise en place du controller
