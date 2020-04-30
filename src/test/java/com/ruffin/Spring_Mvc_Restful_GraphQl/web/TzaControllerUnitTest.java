@@ -1,4 +1,5 @@
-package com.ruffin.Spring_Mvc_Restful_GraphQl.web;
+package com.ruffin.Spring_Mvc_Restful_GraphQl.web;   
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,7 +24,7 @@ public class TzaControllerUnitTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockBean 
     IApplicationService applicationService;
 
     @MockBean
