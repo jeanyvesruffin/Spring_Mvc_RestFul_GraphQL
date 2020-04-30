@@ -13,5 +13,4 @@ class SpringMvcRestfulGraphQlApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

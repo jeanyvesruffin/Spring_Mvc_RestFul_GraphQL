@@ -626,6 +626,28 @@ Avec un scope à test
 - Simulation de classe à l'aide d'annotation @MockBean
 
 
+Exemple:
+
+
+	@RunWith(SpringRunner.class)
+	@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+	class SpringMvcRestfulGraphQlApplicationTests {
+		@Test
+			void contextLoads() {
+		}
+	}
+
+
+**@WebMvcTest pour les test unitaire**
+
+Est une annotation utilisée pour les tests unitaires de la couche contrôleur
+
+- Scans @Controller and @RestController
+- Ne charge pas le contexte d'application entièrement
+- Les dependance de bean doivent etre mocked
+- Permet de tester rapidement une portion de l'application par petit chargement.
+
+
 Methode:
 
 1. On genere a l'aide de l'IDE la classe à tester en cliquant dessus puis New > JUnit Test Case. On selectionne les methodes à tester puis on valide.
@@ -662,17 +684,36 @@ Exemple:
 	}
 
 
-**ATTENTION** Si probleme copier/coller les importations
+**Test d'integration**
 
+- Test l'application entièrement
+- Test toutes les couches
+- Peut être testé sans déploiement de l'application  
 
-**@WebMvcTest**
+**@SpringBootTest pour les tests d'intégration**
 
-Est une annotation utilisée pour les tests unitaires de la couche contrôleur
+Exemple:
 
-- Scans @Controller and @RestController
-- Ne charge pas le contexte d'application entièrement
-- Les dependance de bean doivent etre mocked
-- Permet de tester rapidement une portion de l'application par petit chargement.
+	@RunWith(SpringRunner.class)
+	@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+	@AutoConfigureMockMvc
+	public class TzaControllerIntegrationTest {
+	    @LocalServerPort
+	    private int port;
+	    @Autowired
+	    private TestRestTemplate restTemplate;
+	    @Test
+	    public void getAllApplications() throws Exception {
+	        ResponseEntity<List> response = this.restTemplate.getForEntity("http://localhost:" + port + "/tza/applications/", List.class);
+	        assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
+	    }
+	    @Test
+	    public void getAllTickets() throws Exception {
+	        ResponseEntity<List> response = this.restTemplate.getForEntity("http://localhost:" + port + "/tza/tickets/", List.class);
+	        assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
+	    }
+	}
+
 
 
 
@@ -774,14 +815,32 @@ Select JUnit in the left panel
 Select the project entries under JUnit
 Right click on the project name and click delete
 
-Si erreur: java.lang.IllegalStateException: javax.websocket.server.ServerContainer not available
+Si erreur: 
+
+	java.lang.IllegalStateException: javax.websocket.server.ServerContainer not available
 
 Ajouter à l'annotation SpringBootTest le parametre suivant
 
 	@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
 
-Si erreur : No qualifying bean of type available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
+Si erreur : 
+
+	No qualifying bean of type available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
 
 Faire tres attention d'utiliser des interface et non des classe implementant l'interface lors du cablage (@Autowired) au risque d'avoir se message d'erreur lors des test
 
+Si erreur:
+
+	java.lang.AssertionError: Content type expected:<application/json;charset=UTF-8> but was:<application/json>
+
+S'assurer dans la console que les mock soient bien construit lors du build de test. Et changer, le cas echeant, le test exemple pour resoudre ci-dessus:, APPLICATION_JSON vs APPLICATION_JSON_UTF8
+
+
+Si erreur:
+
+	La base de données est déjà fermée (pour désactiver la fermeture automatique à l'arrêt de la VM, ajoutez "; DB_CLOSE_ON_EXIT = FALSE" à l'URL db)
+
+Modifier votre fichier de configuration application.properties
+	
+	spring.datasource.url=jdbc:h2:mem:bugtracker;DB_CLOSE_ON_EXIT=FALSE
