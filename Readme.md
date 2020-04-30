@@ -277,17 +277,17 @@ Exemple:
 	@Controller
 	public class TzaController
 
-Premièrement, declarer les attributs membres aux classes Service.
+Premièrement, declarer les attributs membres aux interfaces Service.
 
 Exemple:
 
-	  private ApplicationService applicationService;
+	  private IApplicationService applicationService;
 	
 Secondement, on genere les setters, que l'on branche @Autowired.
 Cela aura pour effet de pouvoir attribuer une valeur à un model à l'aide de ces méthodes.
 
 	@Autowired
-    public void setApplicationService(ApplicationService applicationService) {
+    public void setApplicationService(IApplicationService applicationService) {
         this.applicationService = applicationService;
     }
 
@@ -356,7 +356,7 @@ Puis, définir les methodes nécessaire au query (ici findAllApplication et coun
 
 Exemple ici:
 
-	public Iterable<Application> findAllApplication(){	
+	public List<Application> findAllApplication(){	
 		return applicationRepository.findAll();
 	}
 	public long countApplication() {
@@ -780,4 +780,8 @@ Ajouter à l'annotation SpringBootTest le parametre suivant
 
 	@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
+
+Si erreur : No qualifying bean of type available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
+
+Faire tres attention d'utiliser des interface et non des classe implementant l'interface lors du cablage (@Autowired) au risque d'avoir se message d'erreur lors des test
 

@@ -14,8 +14,8 @@ import org.springframework.web.server.ResponseStatusException;
 import com.ruffin.Spring_Mvc_Restful_GraphQl.entity.Application;
 import com.ruffin.Spring_Mvc_Restful_GraphQl.entity.Ticket;
 import com.ruffin.Spring_Mvc_Restful_GraphQl.exception.ApplicationNotFoundException;
-import com.ruffin.Spring_Mvc_Restful_GraphQl.service.ApplicationServiceImpl;
-import com.ruffin.Spring_Mvc_Restful_GraphQl.service.TicketServiceImpl;
+import com.ruffin.Spring_Mvc_Restful_GraphQl.service.IApplicationService;
+import com.ruffin.Spring_Mvc_Restful_GraphQl.service.ITicketService;
 
 	////////////////////////////////////////
 	////VERSION 1 CLASSIQUE CONTROLER///////
@@ -71,15 +71,15 @@ public class TzaController {
 @RestController
 @RequestMapping("/tza")
 public class TzaController {
-	private ApplicationServiceImpl applicationService;
-	private TicketServiceImpl ticketService;
+	private IApplicationService applicationService;
+	private ITicketService ticketService;
 	
 	@Autowired
-	public void setApplicationService(ApplicationServiceImpl applicationService) {
+	public void setApplicationService(IApplicationService applicationService) {
 		this.applicationService = applicationService;
 	}
 	@Autowired
-	public void setTicketService(TicketServiceImpl ticketService) {
+	public void setTicketService(ITicketService ticketService) {
 		this.ticketService = ticketService;
 	}
 	
