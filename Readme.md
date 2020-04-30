@@ -112,7 +112,9 @@ choco install springtoolsuite
 Telechargement du driver [H2](http://www.h2database.com/html/main.html) - Driver H2
 
 
-## Spring Boot Application Annotation
+## @SpringBootApplication
+
+@SpringBootApplication inclue :
 
 **@SpringBootConfiguration**
 
