@@ -626,6 +626,45 @@ Avec un scope à test
 - Simulation de classe à l'aide d'annotation @MockBean
 
 
+Methode:
+
+1. On genere a l'aide de l'IDE la classe à tester en cliquant dessus puis New > JUnit Test Case. On selectionne les methodes à tester puis on valide.
+
+2. Dans la classe généré dans le package test. Ajouter l'annotation  @RunWith(SpringRunner.class) et @WebMvcTest(TzaController.class) au dessus de la classe.
+
+3. Ajouter l'annotation @MockBean au dessus des objets à bouchonner  (mock), ApplicationService et TicketService.
+
+4. Creer un attribut membre à la classe MockMvc. Que vous cablez à Spring à l'aide de @Autowired
+
+5. Dans les methodes à tester invoquer la methode perform de la classe MockMvc qui permet d'exécuter une demande et renvoyez un type qui permet d'enchaîner d'autres actions, telles que l'affirmation d'attentes, sur le résultat. Et y indiquer en parametre l'url ciblé (ex: "/tza/applications/").
+
+6. Puis enchainer les teste souhaitaient.
+
+Exemple:
+
+	@RunWith(SpringRunner.class)
+	@WebMvcTest(TzaController.class)
+	public class TzaControllerUnitTest {
+	    @Autowired
+	    private MockMvc mockMvc;
+	    @MockBean
+	    ApplicationService applicationService;
+	    @MockBean
+	    TicketService ticketService;
+	    @Test
+	    public void getAllApplications() throws Exception {
+       	mockMvc.perform(get("/tza/applications/"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().json("[]"));
+       	verify(applicationService, times(1)).listApplications();
+    	}
+	}
+
+
+**ATTENTION** Si probleme copier/coller les importations
+
+
 **@WebMvcTest**
 
 Est une annotation utilisée pour les tests unitaires de la couche contrôleur
@@ -734,3 +773,11 @@ It will open a popup window
 Select JUnit in the left panel
 Select the project entries under JUnit
 Right click on the project name and click delete
+
+Si erreur: java.lang.IllegalStateException: javax.websocket.server.ServerContainer not available
+
+Ajouter à l'annotation SpringBootTest le parametre suivant
+
+	@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+
+
