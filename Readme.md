@@ -1,6 +1,37 @@
 # SPRING MVC RESTFUL GRAPHQL
 
-Remise à niveau Spring.
+<!-- TOC -->
+
+- [SPRING MVC RESTFUL GRAPHQL](#spring-mvc-restful-graphql)
+    - [Commencer](#commencer)
+        - [Conditions préalables](#conditions-préalables)
+        - [L'installation](#linstallation)
+        - [Maven Dependency](#maven-dependency)
+        - [Driver H2](#driver-h2)
+    - [@SpringBootApplication](#springbootapplication)
+    - [Spring Boot Properties](#spring-boot-properties)
+    - [Spring Boot Profiles](#spring-boot-profiles)
+    - [Accès à la base de donnée H2 (persistance des données)  avec Spring Boot](#accès-à-la-base-de-donnée-h2-persistance-des-données--avec-spring-boot)
+    - [ORM avec JPA](#orm-avec-jpa)
+        - [Entities](#entities)
+    - [Mise en place du package service](#mise-en-place-du-package-service)
+    - [Mise en place du controller](#mise-en-place-du-controller)
+    - [Building a RESTFul Web Application with Spring Boot](#building-a-restful-web-application-with-spring-boot)
+    - [Building a GraphQL Server with Spring Boot](#building-a-graphql-server-with-spring-boot)
+        - [Mise en oeuvre graphqls](#mise-en-oeuvre-graphqls)
+    - [Enabling actuators, metrics, and health indicators](#enabling-actuators-metrics-and-health-indicators)
+    - [Testing with Spring boot](#testing-with-spring-boot)
+        - [Bug fixes](#bug-fixes)
+        - [Application context](#application-context)
+        - [Maven dependency](#maven-dependency)
+        - [Server TOMCAT](#server-tomcat)
+        - [Mode debug Spring](#mode-debug-spring)
+            - [Erreur rencontrées](#erreur-rencontrées)
+        - [ResourcesBundle](#resourcesbundle)
+        - [Java JSP](#java-jsp)
+        - [JUnit](#junit)
+
+<!-- /TOC -->
 
 ## Commencer
 
@@ -194,7 +225,7 @@ Exemple:
 	}
 
 
-#### Entities
+### Entities
 
 Attention l'entité doit respecter les regles suivante:
 
@@ -723,7 +754,7 @@ Exemple:
 
 **REGLE DE BASE ==> IL FAUT TOUJOURS REGARDER LE DERNIER CAUSE BY DANS LES LOGS D'ERREUR"**
 
-####Application context
+###Application context
 
 Afin de savoir "Comment configurer mes parametres de dépendances à travers le fichier applciation.properties ? ".
 Il n'y a pas de solution toute faite.
@@ -741,14 +772,14 @@ Remarques:
 C'est peut etre que la dependance n'est pas mise dans le fichier maven .pom (ex: graphQl et graphiQl)
  
 
-#### Maven dependency
+### Maven dependency
 
 Toujours se méfier des **SCOPE** des dependences copier/ coller du site maven repository.
 
 Exemple: H2 par defaut est à test le changer en runtime
 
 
-#### Server TOMCAT
+### Server TOMCAT
 
 Erreur 404 lors du démarrage TOMCAT
 
@@ -758,13 +789,13 @@ Double-cliquer ensuite sur le server puis cocher dans la rubrique Server Locatio
 
 Votre server TOMCAT est maintenant operationnel à l'adresse URl: localhost:8080
 
-#### Mode debug Spring
+### Mode debug Spring
 
 **RAPPEL** dans le fichier de configuration application.properties
 
 	logging.level.org.springframework:debug
 
-##### Erreur rencontrées
+#### Erreur rencontrées
 
 	***************************
 	APPLICATION FAILED TO START
@@ -784,7 +815,7 @@ Votre server TOMCAT est maintenant operationnel à l'adresse URl: localhost:8080
 Il manquait l'annotation @Service à la classe TicketServiceImpl.class
 
 
-#### ResourcesBundle
+### ResourcesBundle
 
 **ATTENTION à la signature (orthographe) du bean localeResolver()**, ne pas oublier les "e"
 
@@ -795,11 +826,11 @@ Il manquait l'annotation @Service à la classe TicketServiceImpl.class
 			return slr;
 		}
 
-#### Java JSP
+### Java JSP
 
 Deprecié il faut etre en java 1.8 pour que cela fonctionne
 
-#### JUnit
+### JUnit
 
 Si erreur :
 
